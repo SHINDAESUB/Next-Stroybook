@@ -1,9 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    compiler: {
-        styledComponents: true, // 스타일드 컴포넌트를 활성화 한다
-    },
+    compiler: (() => {
+        let compilerConfig = {
+            // styledComponents 활성화
+            styledComponents: true,
+        };
+
+        if (process.env.NODE_ENV === 'production') {
+            compilerConfig = {
+                ...compilerConfig,
+                // 프러덕션 환경에서는 React Testing Library에서 사용하는 data-testid 속성을 삭제
+                reactRemoveProperties: { properties: ['^data-testid$'] },
+            };
+        }
+
+        return compilerConfig;
+    })(),
 };
 
 module.exports = nextConfig;
