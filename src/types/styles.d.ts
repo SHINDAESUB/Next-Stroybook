@@ -1,32 +1,135 @@
-// 상품 카테고리
-export type Category = 'shoes' | 'clothes' | 'book';
-// 상품 상태
-export type Condition = 'new' | 'used';
-
-// 사용자
-export type User = {
-    id: number;
-    username: string;
-    displayName: string;
-    email: string;
-    profileImageUrl: string;
-    description: string;
+/* eslint-disable @typescript-eslint/ban-types */
+/**
+ * Responsive 속성
+ * @description CSS 속성 값을 브레이크 포인트별 사용한다
+ */
+export type ResponsiveProp<T> = {
+    base?: T;
+    sm?: T;
+    md?: T;
+    lg?: T;
+    xl?: T;
 };
+export type Responsive<T> = T | ResponsiveProp<T>;
 
-// 상품
-export type Product = {
-    id: number;
-    category: Category;
-    title: string;
-    description: string;
-    imageUrl: string;
-    blurDataUrl: string;
-    price: number;
-    condition: Condition;
-    owner: User;
-};
+/**
+ * Flex
+ */
+type SelfPosition =
+    | 'center'
+    | 'end'
+    | 'flex-end'
+    | 'flex-start'
+    | 'self-end'
+    | 'self-start'
+    | 'start';
 
-// API 컨텍스트
-export type ApiContext = {
-    apiRootUrl: string;
-};
+type ContentPosition = 'center' | 'end' | 'flex-end' | 'flex-start' | 'start';
+
+type ContentDistribution =
+    | 'space-around'
+    | 'space-between'
+    | 'space-evenly'
+    | 'stretch';
+
+type CSSPropertyGlobals =
+    | '-moz-initial'
+    | 'inherit'
+    | 'initial'
+    | 'revert'
+    | 'unset';
+
+export type CSSPropertyAlignItems =
+    | CSSPropertyGlobals
+    | SelfPosition
+    | 'baseline'
+    | 'normal'
+    | 'stretch'
+    // 코드 자동 보조
+    | (string & {});
+
+export type CSSPropertyAlignContent =
+    | CSSPropertyGlobals
+    | ContentDistribution
+    | 'center'
+    | 'end'
+    | 'flex-end'
+    | 'flex-start'
+    | 'start'
+    | 'baseline'
+    | 'normal'
+    | (string & {});
+
+export type CSSPropertyJustifyItems =
+    | CSSPropertyGlobals
+    | SelfPosition
+    | 'baseline'
+    | 'left'
+    | 'legacy'
+    | 'normal'
+    | 'right'
+    | 'stretch'
+    | (string & {});
+
+export type CSSPropertyJustifyContent =
+    | CSSPropertyGlobals
+    | ContentDistribution
+    | ContentPosition
+    | 'left'
+    | 'normal'
+    | 'right'
+    | (string & {});
+
+export type CSSPropertyFlexWrap =
+    | CSSPropertyGlobals
+    | 'nowrap'
+    | 'wrap'
+    | 'wrap-reverse';
+
+export type CSSPropertyFlexDirection =
+    | CSSPropertyGlobals
+    | 'column'
+    | 'column-reverse'
+    | 'row'
+    | 'row-reverse';
+
+export type CSSPropertyJustifySelf =
+    | CSSPropertyGlobals
+    | SelfPosition
+    | 'auto'
+    | 'baseline'
+    | 'left'
+    | 'normal'
+    | 'right'
+    | 'stretch'
+    | (string & {});
+
+export type CSSPropertyAlignSelf =
+    | CSSPropertyGlobals
+    | SelfPosition
+    | 'auto'
+    | 'baseline'
+    | 'normal'
+    | 'stretch'
+    | (string & {});
+
+/**
+ * Grid
+ */
+type GridLine = 'auto' | (string & {});
+
+export type CSSPropertyGridColumn =
+    | CSSPropertyGlobals
+    | GridLine
+    | (string & {});
+
+export type CSSPropertyGridRow = CSSPropertyGlobals | GridLine | (string & {});
+
+export type CSSPropertyGridAutoFlow =
+    | CSSPropertyGlobals
+    | 'column'
+    | 'dense'
+    | 'row'
+    | (string & {});
+
+export type CSSPropertyGridArea = CSSPropertyGlobals | GridLine | (string & {});
