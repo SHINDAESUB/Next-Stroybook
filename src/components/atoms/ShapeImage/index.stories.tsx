@@ -44,6 +44,7 @@ const Template: ComponentStory<typeof ShapeImage> = (args) => (
     <ShapeImage {...args} />
 );
 
+// .storybook/public/images/sample/ 경로
 export const Circle = Template.bind({});
 Circle.args = { src: '/images/sample/1.jpg', shape: 'circle' };
 
