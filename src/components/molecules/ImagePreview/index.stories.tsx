@@ -1,63 +1,112 @@
+import { ComponentMeta, ComponentStory } from '@storybook/react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { CloseIcon } from 'components/atoms/IconButton';
-import Box from 'components/layout/Box';
-import Flex from 'components/layout/Flex';
+import ImagePreview from './';
+import Dropzone from 'components/molecules/Dropzone';
 
-const ImagePreviewContainer = styled(Box)`
-    position: relative;
+export default {
+    title: 'Molecules/ImagePreview',
+    argTypes: {
+        src: {
+            control: { type: 'text' },
+            description: '이미지 URL',
+            table: {
+                type: { summary: 'string' },
+            },
+        },
+        alt: {
+            control: { type: 'text' },
+            description: '대체 텍스트',
+            table: {
+                type: { summary: 'string' },
+            },
+        },
+        height: {
+            control: { type: 'number' },
+            description: '세로폭',
+            table: {
+                type: { summary: 'number' },
+            },
+        },
+        width: {
+            control: { type: 'number' },
+            description: '가로폭',
+            table: {
+                type: { summary: 'number' },
+            },
+        },
+        onRemove: {
+            description: '삭제 버튼을 클릭했을 때의 이벤트 핸들러',
+            table: {
+                type: { summary: 'function' },
+            },
+        },
+    },
+} as ComponentMeta<typeof ImagePreview>;
+
+const Container = styled.div`
+    width: 288px;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr;
 `;
 
-const CloseBox = styled(Flex)`
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 30px;
-    height: 30px;
-    border-radius: 0 6px 0 6px;
-    background-color: rgba(44, 44, 44, 0.66);
-    cursor: pointer;
-`;
-
-interface ImagePreviewProps {
+interface Image {
+    file?: File;
     src?: string;
-    alt?: string;
-    height?: string;
-    width?: string;
-    onRemove?: (src: string) => void;
 }
 
-/**
- * 이미지 미리보기
- */
-const ImagePreview = ({
-    src,
-    alt,
-    height,
-    width,
-    onRemove,
-}: ImagePreviewProps) => {
-    // 닫기 버튼을 클릭하면 onRemove를 호출한다
-    const handleCloseClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        onRemove && src && onRemove(src);
+const Template: ComponentStory<typeof ImagePreview> = (args) => {
+    const [files, setFiles] = useState<File[]>([]);
+    const [images, setImages] = useState<Image[]>([]);
 
-        return false;
+    useEffect(() => {
+        const newImages = [...images];
+
+        for (const f of files) {
+            const index = newImages.findIndex((img: Image) => img.file === f);
+
+            if (index === -1) {
+                newImages.push({
+                    file: f,
+                    src: URL.createObjectURL(f),
+                });
+            }
+        }
+        setImages(newImages);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [files]);
+
+    const handleRemove = (src: string) => {
+        const image = images.find((img: Image) => img.src === src);
+
+        if (image !== undefined) {
+            setImages((images) =>
+                images.filter((img) => img.src !== image.src),
+            );
+            setFiles((files) =>
+                files.filter((file: File) => file !== image.file),
+            );
+        }
+
+        args && args.onRemove && args.onRemove(src);
     };
 
     return (
-        <ImagePreviewContainer height={height} width={width}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt={alt} height={height} width={width} />
-            <CloseBox
-                alignItems="center"
-                justifyContent="center"
-                onClick={handleCloseClick}
-            >
-                <CloseIcon size={24} color="white" />
-            </CloseBox>
-        </ImagePreviewContainer>
+        <Container>
+            <Dropzone value={files} onDrop={(fileList) => setFiles(fileList)} />
+            {images.map((image, i) => (
+                <ImagePreview
+                    key={i}
+                    src={image.src}
+                    width="100px"
+                    {...args}
+                    onRemove={handleRemove}
+                />
+            ))}
+        </Container>
     );
 };
 
-export default ImagePreview;
+export const WithDropzone = Template.bind({});
+WithDropzone.args = {};
