@@ -4,25 +4,10 @@ import Text from 'components/atoms/Text';
 import Box from 'components/layout/Box';
 
 interface ProductCardProps {
-    /**
-     * 상품 제목
-     */
     title: string;
-    /**
-     * 상품 가격
-     */
     price: number;
-    /**
-     * 상품 기획 URL
-     */
     imageUrl: string;
-    /**
-     * 상품의 흐릿한 이미지의 데이터 URI 스팀
-     */
     blurDataUrl?: string;
-    /**
-     * 변형(표시 스타일)
-     */
     variant?: 'listing' | 'small' | 'detail';
 }
 
